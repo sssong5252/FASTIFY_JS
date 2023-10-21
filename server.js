@@ -5,7 +5,7 @@ const myPlugin = require('./my-plugin')
 const fastifyMongoDB = require('@fastify/mongodb').default
 const path = require('path');
 const fastifyStatic = require('@fastify/static');
-
+const front = path.join(__dirname, 'front');
 require('dotenv').config(); // 환경 변수 로드
 
 // MongoDB 연결 설정
@@ -13,6 +13,10 @@ fastify.register(fastifyMongoDB, {
   forceClose: true,
   url: process.env.MONGODB_URL, // 환경 변수에서 MongoDB URL 가져오기
 })
+
+fastify.get('/login.html', async (request, reply) => {
+  return reply.sendFile('login.html'); // specify the file name here
+});
 
 // 라우트 등록
 fastify.register(routes)
