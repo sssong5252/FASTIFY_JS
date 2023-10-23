@@ -14,16 +14,9 @@ fastify.register(fastifyMongoDB, {
   url: process.env.MONGODB_URL, // 환경 변수에서 MongoDB URL 가져오기
 })
 
-fastify.get('/login.html', async (request, reply) => {
-  return reply.sendFile('login.html'); // specify the file name here
-});
-
-// 라우트 등록
-fastify.register(routes)
-fastify.register(otherRoutes)
-
 // 플러그인 등록
 fastify.register(myPlugin)
+
 
 // register() 메서드 내부에서 미들웨어 등록
 fastify.register((instance, options, done) => {
@@ -46,11 +39,15 @@ fastify.addHook('onReady', async () => {
 
 // 정적 파일 제공 설정
 fastify.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'), // 'public' 폴더에 있는 파일들을 제공합니다.
-    prefix: '/', // 접두사. 예: '/favicon.ico'로 요청이 오면 './public/favicon.ico'를 반환합니다.
-  });
+  root: path.join(__dirname, 'front'), // 'public' 폴더에 있는 파일들을 제공합니다.
+  prefix: '/', // 접두사. 예: '/favicon.ico'로 요청이 오면 './public/favicon.ico'를 반환합니다.
+});
+
+// 라우트 등록
+fastify.register(routes)
+fastify.register(otherRoutes)
 
 // 서버 시작하기 
 fastify.listen({ port: 3000 }, (err) => {
-    if (err) throw err;
-  })
+  if (err) throw err;
+})
