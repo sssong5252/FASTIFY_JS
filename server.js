@@ -8,6 +8,7 @@ const fastifyStatic = require('@fastify/static');
 const front = path.join(__dirname, 'front');
 require('dotenv').config(); // 환경 변수 로드
 
+
 // MongoDB 연결 설정
 fastify.register(fastifyMongoDB, {
   forceClose: true,
