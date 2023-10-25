@@ -52,3 +52,12 @@ fastify.register(otherRoutes)
 fastify.listen({ port: 3000 }, (err) => {
   if (err) throw err;
 })
+
+// this will work with fastify-static and send ./static/index.html
+fastify.setNotFoundHandler((req, res) => {
+  res.sendFile('login.html')
+})
+
+fastify.get('/', (req, reply) => {
+  return reply.sendFile('login.html');  // front 폴더의 login.html 파일을 반환합니다.
+});
