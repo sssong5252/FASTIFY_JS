@@ -6,8 +6,10 @@ const fastifyMongoDB = require('@fastify/mongodb').default
 const path = require('path');
 const fastifyStatic = require('@fastify/static');
 const front = path.join(__dirname, 'front');
-require('dotenv').config(); // 환경 변수 로드
+const bcrypt = require('bcrypt');
+const { request } = require('http')
 
+require('dotenv').config(); // 환경 변수 로드
 
 // MongoDB 연결 설정
 fastify.register(fastifyMongoDB, {
@@ -17,7 +19,6 @@ fastify.register(fastifyMongoDB, {
 
 // 플러그인 등록
 fastify.register(myPlugin)
-
 
 // register() 메서드 내부에서 미들웨어 등록
 fastify.register((instance, options, done) => {
@@ -40,8 +41,8 @@ fastify.addHook('onReady', async () => {
 
 // 정적 파일 제공 설정
 fastify.register(fastifyStatic, {
-  root: path.join(__dirname, 'front'), // 'public' 폴더에 있는 파일들을 제공합니다.
-  prefix: '/', // 접두사. 예: '/favicon.ico'로 요청이 오면 './public/favicon.ico'를 반환합니다.
+  root: path.join(__dirname, 'front'), // 'front' 폴더에 있는 파일들을 제공합니다.
+  prefix: '/', // 접두사. 예: '/favicon.ico'로 요청이 오면 './front/favicon.ico'를 반환합니다.
 });
 
 // 라우트 등록
@@ -55,9 +56,36 @@ fastify.listen({ port: 3000 }, (err) => {
 
 // this will work with fastify-static and send ./static/index.html
 fastify.setNotFoundHandler((req, res) => {
-  res.sendFile('login.html')
+  res.sendFile('signup.html')
 })
 
-fastify.get('/', (req, reply) => {
-  return reply.sendFile('login.html');  // front 폴더의 login.html 파일을 반환합니다.
+fastify.get('/signup', (req, reply) => {
+  return reply.sendfile('login.html');
+});
+
+fastify.get('/signup', (req, reply) => {
+  return reply.sendFile('signup.html');  // front 폴더의 signup.html 파일을 반환합니다.
+});
+
+fastify.post('/signin', async (request, reply) => {
+  const { username, password } = request.body;
+
+  if (hasshedpassword != password.hashedPassword);
+    console.log('throw err');
+});
+
+// 회원가입 API 엔드포인트 생성
+fastify.post('/signup', async (request, reply) => {
+  const { username, password } = request.body; // 클라이언트로부터 받은 회원 정보
+
+  // 비밀번호 암호화
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // 회원 정보 데이터베이스에 저장
+  await fastify.mongo.db.collection('users').insertOne({
+    username,
+    password: hashedPassword,
+  });
+
+  reply.send('회원가입이 완료되었습니다.');
 });

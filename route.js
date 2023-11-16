@@ -1,10 +1,8 @@
 async function routes(fastify, options) {
+  // fastify.get('/signup', async (request, reply) => {
+  //   return reply.sendFile("signup.html"); // specify the file name here
+  // })
+  // fastify.get('/register')
+}
 
-    fastify.get('/login', async (request, reply) => {
-      return reply.sendFile("login.html"); // specify the file name here
-    })
-
-    // fastify.get('/register')
-  }
-  
-  module.exports = routes  
+module.exports = routes
